@@ -45,7 +45,7 @@ for site in config.SITES:
     csv_line['status_code'] = r.status_code
     csv_line['response_time'] = float(r.elapsed.seconds) + float(r.elapsed.microseconds)/1000000.0
 
-    if match_body is not None and not string_match:
+    if string_match is not None and not string_match:
         csv_line['down'] = 'Y'
     elif r.status_code <> 200:
         csv_line['down'] = 'Y'
