@@ -1,0 +1,5 @@
+MONITOR_FILE='./{name}-results.csv'
+GLOBAL_TIMEOUT=10 # seconds
+
+SITES = []
+SITES.append({'name': 'example', 'url': 'http://example.com', 'body_string': '^<title>Example Site</title>$', 'wordpress': True})
