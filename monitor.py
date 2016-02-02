@@ -27,21 +27,12 @@ for site in config.SITES:
 
     # Check response body lines
     string_match = None
-    wordpress_down = None
 
-    if 'body_string' in site or ('wordpress' in site and site['wordpress']):
+    if r.status_code == 200 and 'body_string' in site:
         string_match = False
-        wordpress_down = False
 
         for line in r.iter_lines():
-            match_body = re.search(site['body_string'], line)
-            match_wordpress = re.search('<title>Database Error</title>$', line)
-
-            if match_wordpress:
-                wordpress_down = True
-                break
-
-            if not match_body:
+            if not re.search(site['body_string'], line):
                 continue
 
             string_match = True
@@ -54,9 +45,9 @@ for site in config.SITES:
     csv_line['status_code'] = r.status_code
     csv_line['response_time'] = float(r.elapsed.seconds) + float(r.elapsed.microseconds)/1000000.0
 
-    if wordpress_down is not None and wordpress_down:
+    if match_body is not None and not string_match:
         csv_line['down'] = 'Y'
-    elif match_body is not None and not match_body:
+    elif r.status_code <> 200:
         csv_line['down'] = 'Y'
     else:
         csv_line['down'] = 'N'
